@@ -170,7 +170,7 @@ streamlit run app.py
 - Displays Priority Mismatch Dashboard (distribution, mismatch types, top signals)
 - Severity-delta heatmap across ticket categories/channels
 
-**Hosted demo:** *
+**Hosted demo:** *https://my8nvylwymy39gkcgjyrapp.streamlit.app/
 
 ---
 
