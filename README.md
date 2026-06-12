@@ -17,7 +17,7 @@ Manual support-ticket triage suffers from agent fatigue, customer favoritism, an
 
 The project is split into a **training pipeline** and an **inference pipeline**, orchestrated by `train_pipeline.py` and `predict.py` respectively.
 
-```
+```text
 Raw Tickets
    │
    ▼
@@ -65,14 +65,14 @@ Stage 2b (LLM-based zero-shot severity scoring using mistralai/Mistral-7B-Instru
 
 Instead, Stage 2b was executed **separately on Google Colab** (GPU runtime). The notebook used for this step is provided in:
 
-```
+```text
 notebooks/
 ```
 
 The **output of Stage 2b** (per-ticket LLM severity scores) is exported as a CSV and placed at:
 
-```
-<path-to-csv-in-repo>      # e.g. data/processed/llm_severity_scores.csv
+```text
+data/processed/llm_scores.csv
 ```
 
 `src/pseudo_labeling/signal_fusion.py` (Stage 2c) reads this CSV directly and fuses it with the Stage 2a rule-based signal to produce the final pseudo-labels — so `train_pipeline.py` can be re-run end-to-end **as long as this CSV is present**, without needing a GPU.
@@ -83,17 +83,17 @@ The **output of Stage 2b** (per-ticket LLM severity scores) is exported as a CSV
 
 ## 4. Ablation: Signal Fusion Justification
 
-| Signal | Source | Individual Contribution (Pseudo-label Agreement / Accuracy) |
+| Signal | Source | Individual Contribution (Pseudo-label Agreement / Coverage) |
 |---|---|---|
-| Rule-based NLP (keyword density, negation, escalation phrases) | Stage 2a | *fill in from experiment results* |
-| LLM zero-shot severity (Mistral-7B-Instruct) | Stage 2b (Colab) | *fill in from experiment results* |
-| Fused signal (Stages 2a + 2b) | Stage 2c | *fill in from experiment results* |
+| Rule-based NLP (keyword density, negation, escalation phrases) | Stage 2a | **100% Coverage** (20,000 tickets). Baseline agreement with Resolution Time: **29.37%** |
+| LLM zero-shot severity (Mistral-7B-Instruct) | Stage 2b (Colab) | **25% Coverage** (5,000 tickets). Baseline agreement with Rule-based NLP: **51.74%** |
+| Fused signal (Stages 2a + 2b + Resolution Time) | Stage 2c | Yields a **55.41%** mismatch rate, serving as the definitive pseudo-label for Stage 3 training. |
 
 ---
 
 ## 5. Repository Structure
 
-```
+```text
 .
 ├── .venv/                      # Local Python virtual environment (Add to .gitignore)
 ├── app/
@@ -144,7 +144,7 @@ The **output of Stage 2b** (per-ticket LLM severity scores) is exported as a CSV
 
 ### Installation
 ```bash
-git clone https://github.com/QyAkhil/Support-Integrity-Auditor--SIA-.git
+git clone [https://github.com/QyAkhil/Support-Integrity-Auditor--SIA-.git](https://github.com/QyAkhil/Support-Integrity-Auditor--SIA-.git)
 cd Support-Integrity-Auditor--SIA-
 pip install -r requirements.txt
 ```
@@ -170,27 +170,37 @@ streamlit run app.py
 - Displays Priority Mismatch Dashboard (distribution, mismatch types, top signals)
 - Severity-delta heatmap across ticket categories/channels
 
-**Hosted demo:** *https://my8nvylwymy39gkcgjyrapp.streamlit.app/
+**Hosted demo:** https://my8nvylwymy39gkcgjyrapp.streamlit.app/
 
 ---
 
 ## 7. Evidence Dossier Schema
 
-For every ticket classified as a mismatch, the system outputs:
+For every ticket classified as a mismatch, the system outputs a grounded explanation. Example schema:
 
 ```json
 {
-  "ticket_id": "...",
-  "assigned_priority": "...",
-  "inferred_severity": "...",
-  "mismatch_type": "Hidden Crisis | False Alarm",
-  "severity_delta": "",
+  "ticket_id": "TKT-100003",
+  "assigned_priority": "Low",
+  "inferred_severity": "High",
+  "mismatch_type": "Hidden Crisis",
+  "severity_delta": 2,
   "feature_evidence": [
-    { "signal": "keyword", "value": "...", "weight": "..." },
-    { "signal": "resolution_time", "value": "...", "interpretation": "..." }
+    { 
+      "signal": "keyword", 
+      "value": "failed", 
+      "weight": "High", 
+      "source_field": "Ticket_Description" 
+    },
+    { 
+      "signal": "resolution_time", 
+      "value": "41 hours", 
+      "interpretation": "Resolved in 41h — slow resolution suggests lower agent priority", 
+      "source_field": "Resolution_Time_Hours" 
+    }
   ],
-  "constraint_analysis": "<2-3 sentence grounded explanation>",
-  "confidence": ""
+  "constraint_analysis": "The ticket subject 'Login failed' via Web Form indicates a severity of High, yet was assigned Low priority by the agent. Resolution took 41 hours, which combined with the issue type suggests the ticket's true impact was underestimated by 2 severity level(s).",
+  "confidence": 1.0000
 }
 ```
 
@@ -209,7 +219,7 @@ For every ticket classified as a mismatch, the system outputs:
 
 ### Pipeline Run Summary
 
-| | |
+| Metric | Value |
 |---|---|
 | Total tickets processed | 20,000 |
 | Mismatches detected | 11,098 (55.49%) |
@@ -227,10 +237,11 @@ All three verification thresholds (Accuracy, Macro F1, Per-Class Recall on both 
 
 ## 9. Demo Video
 
-🔗 *https://drive.google.com/drive/folders/1Mu9pYWhoZAenGWyifw4Y_3H9DMjPJyPh*
+🔗 https://drive.google.com/drive/folders/1Mu9pYWhoZAenGWyifw4Y_3H9DMjPJyPh
 
 ---
 
 ## 10. Disclaimer
 
-This project was built for the MARS Open Projects 2026 evaluation. All implementation logic is original; open-source libraries and pretrained models (sentence-transformers, Mistral-7B-Instruct ) were used as permitted.
+This project was built for the MARS Open Projects 2026 evaluation. All implementation logic is original; open-source libraries and pretrained models (sentence-transformers, Mistral-7B-Instruct) were used as permitted.
+
