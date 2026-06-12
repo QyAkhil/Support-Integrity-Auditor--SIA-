@@ -227,12 +227,7 @@ All three verification thresholds (Accuracy, Macro F1, Per-Class Recall on both 
 
 ## 9. Demo Video
 
-A ~3 minute walkthrough covering:
-- One "Hidden Crisis" and one "False Alarm" example
-- Explanation of the pseudo-label generation strategy
-- Live adversarial ticket input demonstration
-
-🔗 *Link: fill in (Google Drive / YouTube)*
+🔗 *https://drive.google.com/drive/folders/1Mu9pYWhoZAenGWyifw4Y_3H9DMjPJyPh*
 
 ---
 
