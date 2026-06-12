@@ -80,9 +80,9 @@ def predict_ticket(df: pd.DataFrame) -> pd.DataFrame:
 st.title("🛡️ Support Integrity Auditor")
 
 # --- DEBUGGING BLOCK ---
-st.warning(f"Root path identified as: {C.ROOT}")
-st.warning(f"Looking for predictions at: {C.PREDICTIONS_CSV}")
-st.warning(f"Does predictions.csv exist? {os.path.exists(C.PREDICTIONS_CSV)}")
+# st.warning(f"Root path identified as: {C.ROOT}")
+# st.warning(f"Looking for predictions at: {C.PREDICTIONS_CSV}")
+# st.warning(f"Does predictions.csv exist? {os.path.exists(C.PREDICTIONS_CSV)}")
 # -----------------------
 st.markdown("Semantics-driven detection of priority mismatches in support tickets")
 
