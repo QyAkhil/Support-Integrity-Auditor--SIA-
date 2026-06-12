@@ -7,13 +7,7 @@ import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
 
-st.title("🛡️ Support Integrity Auditor")
 
-# --- DEBUGGING BLOCK ---
-st.warning(f"Root path identified as: {C.ROOT}")
-st.warning(f"Looking for predictions at: {C.PREDICTIONS_CSV}")
-st.warning(f"Does predictions.csv exist? {os.path.exists(C.PREDICTIONS_CSV)}")
-# -----------------------
 # ── Project root on sys.path ──────────────────────────────────────────────────
 APP_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.dirname(APP_DIR)
@@ -84,6 +78,12 @@ def predict_ticket(df: pd.DataFrame) -> pd.DataFrame:
 #  UI LAYOUT
 # ══════════════════════════════════════════════════════════════════════════════
 st.title("🛡️ Support Integrity Auditor")
+
+# --- DEBUGGING BLOCK ---
+st.warning(f"Root path identified as: {C.ROOT}")
+st.warning(f"Looking for predictions at: {C.PREDICTIONS_CSV}")
+st.warning(f"Does predictions.csv exist? {os.path.exists(C.PREDICTIONS_CSV)}")
+# -----------------------
 st.markdown("Semantics-driven detection of priority mismatches in support tickets")
 
 page = st.sidebar.radio("Navigation", ["📊 Dashboard", "🔍 Single Ticket", "📁 Batch Upload", "📋 Dossier Explorer"])
