@@ -1,0 +1,6 @@
+pandas 
+matplotlib
+scipy
+scikit-learn
+sentence-transformers
+lightgbm
