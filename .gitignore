@@ -7,7 +7,7 @@ data/processed/
 
 models/*.pkl
 
-outputs/
+# outputs/
 
 __pycache__/
 *.pyc
